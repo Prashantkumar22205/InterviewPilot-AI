@@ -1,4 +1,4 @@
-import { main } from 'framer-motion/client'
+
 import { useNavigate, Link } from 'react-router'
 import { useAuth } from '../hooks/useAuth'
 import React,{useState} from 'react'

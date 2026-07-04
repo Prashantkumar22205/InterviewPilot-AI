@@ -52,6 +52,6 @@ export async function getMe() {
         const responce = await api.get("/get-me")
         return responce.data
     } catch (err) {
-        console.log(err)
+        // console.log(err)
     }
 }

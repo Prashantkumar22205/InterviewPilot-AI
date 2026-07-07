@@ -7,7 +7,7 @@ app.use(express.static("public"))
 app.use(express.json())
 app.use(cookieParser())
 app.use(cors({
-    origin:true,
+    origin:"https://interview-pilot-ai-peach.vercel.app",
     credentials:true
 }))
 

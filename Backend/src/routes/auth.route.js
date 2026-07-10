@@ -22,7 +22,7 @@ router.post("/login",authController.loginUserController)
 /**
  * @route GET /api/auth/logout
  * @description clear token from user cookie and add the token in blacklist
- * @access public
+ * @access Public
  */
 router.get("/logout", authController.logoutUserController)
 
@@ -30,8 +30,20 @@ router.get("/logout", authController.logoutUserController)
 /**
  * @route GET /api/auth/get-me
  * @description get the current logged in user details
- * @access private
+ * @access Private
  */
 router.get("/get-me", authMiddleware.authUser, authController.getMeController)
+
+
+/**
+ * @route PATCH /api/auth/change-password
+ * @description Change logged-in user's password
+ * @access Private
+ */
+router.patch(
+    "/change-password",
+    authMiddleware.authUser,
+    authController.changePasswordController
+);
 
 module.exports=router

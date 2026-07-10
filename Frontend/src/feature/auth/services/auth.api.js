@@ -3,6 +3,7 @@ const API = import.meta.env.VITE_API_URL;
 
 const api = axios.create({
     baseURL:`${API}/api/auth`,
+    // baseURL:"http://localhost:3000/api/auth",
     withCredentials:true
 })
 
@@ -54,5 +55,18 @@ export async function getMe() {
         return responce.data
     } catch (err) {
         // console.log(err)
+    }
+}
+
+export async function changePassword({currentPassword ,newPassword}){
+    try{
+        const responce = await api.patch("/change-password",{
+            currentPassword ,newPassword
+        })
+        return responce.data
+
+    }catch(err){
+        console.error(err.response?.data || err.message);
+        throw err; 
     }
 }

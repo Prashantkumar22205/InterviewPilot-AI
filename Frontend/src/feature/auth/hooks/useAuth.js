@@ -1,6 +1,6 @@
 import { useContext,useEffect } from "react";
 import { AuthContext } from "../auth.context";
-import { login,register,logout,getMe } from "../services/auth.api";
+import { login,register,logout,getMe,changePassword } from "../services/auth.api";
 
 
 
@@ -35,7 +35,7 @@ export const useAuth = ()=>{
         }
     }
 
-      const handleLogout = async () => {
+    const handleLogout = async () => {
         setLoading(true)
         try {
             const data = await logout()
@@ -47,21 +47,43 @@ export const useAuth = ()=>{
         }
     }
 
-    useEffect(()=>{
-        const getAndSetUser = async ()=>{
-             try {
-                const data = await getMe()
-                setUser(data.user)
-                
-             } catch (err) { }
-             finally{
-                 setLoading(false)
-             }    
-        }
-        getAndSetUser()
-    },[])
+    const handleChangePassword = async({currentPassword, newPassword }) => {
+
+    setLoading(true);
+
+    try {
+        const data = await changePassword({
+            currentPassword,
+            newPassword
+        });
+
+        return data;
+
+    } catch (err) {
+        throw err;
+    } finally {
+        setLoading(false);
+    }
+};
+
+    const handleGetMe = async () => {
+    try {
+        const data = await getMe();
+        setUser(data.user);
+        return data.user;
+    } catch (err) {
+        setUser(null);
+    } finally {
+        setLoading(false);
+    }
+};
+
+    useEffect(() => {
+      
+    handleGetMe();
+    }, []);
 
 
-    return {user,loading,handleLogin,handleLogout,handleRegister}
+    return {user,loading,handleLogin,handleLogout,handleRegister,handleChangePassword,handleGetMe}
 
 }

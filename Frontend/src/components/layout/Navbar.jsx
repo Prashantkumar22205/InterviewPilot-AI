@@ -1,5 +1,5 @@
 import { Settings, LogOut } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { useAuth } from "../../feature/auth/hooks/useAuth";
 
 const Navbar = () => {

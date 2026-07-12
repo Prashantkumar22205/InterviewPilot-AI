@@ -2,6 +2,8 @@ import React, { useState, useRef } from 'react'
 import { useNavigate } from 'react-router'
 import { useInterview } from '../hooks/useInterview.js'
 import { useAuth } from '../../auth/hooks/useAuth.js'
+import { Settings } from "lucide-react";
+import DashboardLayout from '../../../components/layout/DashboardLayout.jsx';
 
 const Home = () => {
 
@@ -13,12 +15,14 @@ const Home = () => {
 
     const navigate = useNavigate()
 
+
     const handleGenerateReport = async () => {
         const resumeFile = resumeInputRef.current.files[ 0 ]
         const data = await generateReport({ jobDescription, selfDescription, resumeFile })
         navigate(`/interview/${data._id}`)
     }
 
+// Logout
     const handlelogout = async()=>{
         try{
            await handleLogout()
@@ -27,6 +31,11 @@ const Home = () => {
             console.log(err)
         }
     }
+
+// Setting
+    const handleSettings = () => {
+        navigate("/settings");
+    };
 
 
 
@@ -39,19 +48,38 @@ const Home = () => {
     }
 
     return (
-        <div className="w-full min-h-screen bg-[#0d1117] text-[#e6edf3] flex flex-col items-center justify-center px-6 py-12 gap-8">
+    <div className="w-full min-h-screen bg-[#0d1117] text-[#e6edf3] flex flex-col items-center justify-center px-6 py-12 gap-8">
 
             {/* Page Header */}
-            <div className='w-full min-h-[100px] flex items-center justify-between'>
-            <header className=" ml-110 text-center">
+         <div className='w-full min-h-[100px] flex items-center justify-between'>
+
+              <div className="flex-1">
+                {/* Empty for now */}
+                </div>
+
+            <header className=" flex-2 text-center">
                 <h1 className="text-4xl font-bold text-[#e6edf3] mb-2">Create Your Custom <span className="text-pink-500">Interview Plan</span></h1>
                 <p className="text-[#7d8590] text-[15px] max-w-[480px] mx-auto leading-7">Let our AI analyze the job requirements and your unique profile to build a winning strategy.</p>
             </header>
-            <button 
-            onClick={handlelogout}
-            className='mr-20 rounded-[15px] w-[120px] h-[50px] bg-[#161b22] border border-pink-500 text-pink-400 font-semibold transition hover:bg-pink-900/15 hover:text-white active:scale-95'
-            >Logout</button>
-           </div>
+         
+            <div className=" flex-1 flex items-center gap-3 justify-center ">
+                <button
+                onClick={handleSettings}
+                className="flex items-center gap-2 rounded-[15px] h-[50px] px-5 bg-[#161b22] border border-[#2a3348] text-[#e6edf3] font-semibold transition hover:border-pink-500 hover:bg-pink-500/10" >
+                <Settings size={18} />
+                Settings
+               </button>
+
+               <button
+                onClick={handlelogout}
+                className="rounded-[15px] h-[50px] px-5 bg-[#161b22] border border-[#2a3348] text-[#e6edf3] font-semibold transition hover:border-pink-500 hover:bg-pink-500/10" >
+                Logout
+               </button>
+
+             </div>
+         </div>
+   
+
             {/* Main Card */}
             <div className="w-full max-w-[900px] bg-[#161b22] border border-[#2a3348] rounded-2xl overflow-hidden">
                 <div className="flex min-h-[520px]">
@@ -169,7 +197,9 @@ const Home = () => {
                 <a className="hover:text-[#e6edf3] transition-colors" href='#'>Terms of Service</a>
                 <a className="hover:text-[#e6edf3] transition-colors" href='#'>Help Center</a>
             </footer>
-        </div>
+
+   
+          </div>
     )
 }
 

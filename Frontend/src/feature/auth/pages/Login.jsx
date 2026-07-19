@@ -1,8 +1,11 @@
 
+import React,{useState} from 'react'
 import { useNavigate, Link } from 'react-router'
 import { useAuth } from '../hooks/useAuth'
-import React,{useState} from 'react'
 import { AuthContext } from '../auth.context' 
+import Spinner from '../../../shared/ui/Spinner'
+import { notify } from '../../../shared/utils/toast'
+import GoogleButton from '../conponents/GoogleButton'
 
 const Login = () => {
   const {loading,handleLogin} = useAuth()
@@ -10,28 +13,30 @@ const Login = () => {
 
   const [email,setEmail ]= useState("")
   const [password,setPassword ]= useState("")
-  const [error,setError] = useState("")
+  // const [error,setError] = useState("")
   
  const handleSubmit = async (e) => {
         e.preventDefault()
-        setError("")
+        // setError("")
         try{
           await handleLogin({email,password})
-          navigate("/")
+        notify.success("Welcome back!");
+        navigate("/");
         }catch(err){
-            setError(err.response?.data?.message || "Invalid email or password")
+            // setError(err.response?.data?.message || "Invalid email or password")
+            notify.error(err.response?.data?.message || "Invalid email or password")
         }
         
     }
 
     if(loading){
-      return( <main className="flex min-h-screen flex-col items-center justify-center bg-[#161616]">
-                 <div className="h-12 w-12 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
-
-                  <h1 className="mt-4 text-xl font-semibold text-gray-700 animate-pulse">
-                     Loading...
-                   </h1>
-               </main>)
+      return( 
+        <Spinner
+           size='lg'
+           fullScreen
+           text='Loading ....'
+        />
+      )
             }
 
   return (
@@ -57,9 +62,20 @@ const Login = () => {
             type="password" name='password' placeholder='Enter password' />
           </div> 
 
-          <button className='rounded-full bg-red-500 h-[50px] text-white font-semibold active:scale-x-105 ease-in-out'>Login</button>
-          {error && <p className='text-sm text-red-500'>{error}</p>}
+          <button type='submit' className='rounded-full bg-red-500 h-[50px] text-white font-semibold active:scale-x-105 ease-in-out'>Login</button>
+          {/* {error && <p className='text-sm text-red-500'>{error}</p>} */}
        </form>
+       <div className="my-6 flex items-center">
+            <div className="flex-1 border-t border-gray-700"></div>
+
+            <span className="mx-4 text-sm text-gray-400">
+                OR
+            </span>
+
+            <div className="flex-1 border-t border-gray-700"></div>
+        </div>
+
+           <GoogleButton />
        <p className='mt-4 text-sm text-gray-600'>Don't have an account? <Link to={"/register"} className='text-red-500' >Register</Link> </p>
     </div>
 

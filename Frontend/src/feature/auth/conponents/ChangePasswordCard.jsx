@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { Eye, EyeOff, Lock } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
+import Spinner from "../../../shared/ui/Spinner";
+import { notify } from "../../../shared/utils/toast";
+
 
 
 
@@ -12,7 +15,7 @@ const ChangePasswordCard = () => {
     const [showNew, setShowNew] = useState(false);
     const [showConfirm, setShowConfirm] = useState(false);
     const [errors, setErrors] = useState({});
-    const [success, setSuccess] = useState("");
+   
 
     const [form, setForm] = useState({
         currentPassword: "",
@@ -32,7 +35,7 @@ const ChangePasswordCard = () => {
        [e.target.name]: ""
      }));
 
-     setSuccess("");
+    
 };
 
 
@@ -86,7 +89,7 @@ const ChangePasswordCard = () => {
 const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // setSuccess("");
+  
     setErrors({});
 
     if (!validate()) {
@@ -106,10 +109,9 @@ const handleSubmit = async (e) => {
     const msg =
     data?.message || data?.data?.message || "Password changed successfully";
     
-    setSuccess(msg);
-    
-   console.log("success message set:", msg);
-        // setSuccess(data.message);
+  
+    notify.success(data.message)
+       
 
         setForm({
             currentPassword: "",
@@ -139,12 +141,12 @@ const handleSubmit = async (e) => {
 
 
             </div>
-                {success && (
+                {/* {success && (
                  <div className="mb-5 rounded-lg bg-green-500/20 border border-green-500 text-green-300 px-4 py-3">
                 {success}
                  </div>
                 )}
-      
+       */}
 
             <form onSubmit={handleSubmit}>
 
@@ -259,7 +261,7 @@ const handleSubmit = async (e) => {
                 className="mt-8 w-full bg-blue-600 hover:bg-blue-700 py-3 rounded-xl font-semibold transition   disabled:opacity-50
                 disabled:cursor-not-allowed"
             >
-                 {loading ? "Changing..." : "Change Password"}
+                 {loading ? <Spinner size="sm"/> : "Change Password"}
             </button>
             </form>
         </div>

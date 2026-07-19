@@ -4,10 +4,10 @@ import ChangePasswordCard from "../conponents/ChangePasswordCard";
 
 const Settings = () => {
 
-    const { user } = useAuth();
+    const { user,loading } = useAuth();
 
     return (
-        <div className="min-h-screen bg-[#111827] text-white">
+        <>
 
             <div className="max-w-5xl mx-auto px-6 py-10">
 
@@ -16,12 +16,13 @@ const Settings = () => {
                 </h1>
 
                 <AccountCard user={user} />
+                 
                 
                 <ChangePasswordCard/>
 
             </div>
 
-        </div>
+        </>
     );
 };
 

@@ -1,6 +1,9 @@
 import { Settings, LogOut } from "lucide-react";
 import { useNavigate } from "react-router";
 import { useAuth } from "../../feature/auth/hooks/useAuth";
+import Button from "../ui/Button";
+import { notify } from "../utils/toast";
+import UserMenu from "./UserMenu";
 
 const Navbar = () => {
 
@@ -12,6 +15,7 @@ const Navbar = () => {
         try{
            await handleLogout()
             navigate("/login")
+            notify.success("Logged out successfully.")
         }catch(err){
             console.log(err)
         }
@@ -24,28 +28,32 @@ const Navbar = () => {
 
                 <h1
                     onClick={() => navigate("/")}
-                    className="text-2xl font-bold text-white cursor-pointer"
+                    className="text-2xl font-bold text-white cursor-pointer hover:color:pink-500"
                 >
                     InterviewPilot AI
                 </h1>
 
-                <div className="flex items-center gap-3">
+                {/* <div className="flex items-center gap-3">
 
-                    <button
+                    <Button
                         onClick={() => navigate("/settings")}
-                        className="px-4 py-2 rounded-xl bg-[#161b22] hover:bg-[#1f2635]"
+                         variant='secondary'
+                        className="px-4 py-2 rounded-xl bg-[#161b22] "
                     >
                         <Settings size={18}/>
-                    </button>
+                    </Button>
 
-                    <button
+                    <Button
                         onClick={logout}
-                        className="px-4 py-2 rounded-xl bg-pink-500 hover:bg-pink-600"
+                        variant='secondary'
+                        className="px-4 py-2 rounded-xl "
                     >
                         <LogOut size={18}/>
-                    </button>
+                        
+                    </Button>
 
-                </div>
+                </div> */}
+                <UserMenu />
 
             </div>
 

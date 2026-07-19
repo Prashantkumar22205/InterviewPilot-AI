@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { useNavigate, Link } from 'react-router'
 import { useAuth } from '../hooks/useAuth'
+import Spinner from '../../../shared/ui/Spinner'
+import { notify } from '../../../shared/utils/toast'
 const Register = () => {
      
      const {loading,handleRegister} = useAuth()
@@ -8,19 +10,36 @@ const Register = () => {
      const [username,setUsername] = useState("")
      const [email,setEmail ]= useState("")
       const [password,setPassword ]= useState("")
-      const [error,setError] = useState("")
+    //   const [error,setError] = useState("")
       const navigate = useNavigate()
+
      const handleSubmit = async (e) => {
             e.preventDefault()
-            setError("")
+            // setError("")
             try{
                 await handleRegister({username,email,password})
-                navigate('/login')
+                navigate("/login");
+                notify.success("Account created successfully!");
             }
             catch(err){
-                setError(err.response?.data?.message || "email is already exist ")
+                // setError(err.response?.data?.message || "email is already exist ")
+                notify.error(err.response?.data?.message || "email is already exist ")
             }
         }
+
+     if(loading){
+      return( 
+        <Spinner
+           size='lg'
+           fullScreen
+           text='Loading ....'
+        />
+      )
+            }
+
+
+
+
   return (
    
       <main className='min-h-screen w-full flex items-center  bg-[#0d1117]  justify-center text-white '>
@@ -50,7 +69,7 @@ const Register = () => {
         </div> 
 
         <button className='rounded-full bg-red-500 h-[50px]  active:scale-x-105 ease-in-out'>Register</button>
-        {error && <p className='text-sm text-red-500'>{error}</p>}
+        {/* {error && <p className='text-sm text-red-500'>{error}</p>} */}
 
      </form>
        <p>Already have an account? <Link to={"/login"} className='text-red-500' >Login</Link> </p>

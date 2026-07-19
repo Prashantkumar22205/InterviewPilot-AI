@@ -3,8 +3,9 @@ import { useNavigate } from 'react-router'
 import { useInterview } from '../hooks/useInterview.js'
 import { useAuth } from '../../auth/hooks/useAuth.js'
 import { Settings } from "lucide-react";
-import DashboardLayout from '../../../components/layout/DashboardLayout.jsx';
-
+import Button from '../../../shared/ui/Button.jsx';
+import Spinner from '../../../shared/ui/Spinner.jsx';
+import { notify } from '../../../shared/utils/toast.js'
 const Home = () => {
 
     const { loading, generateReport,reports } = useInterview()
@@ -22,61 +23,27 @@ const Home = () => {
         navigate(`/interview/${data._id}`)
     }
 
-// Logout
-    const handlelogout = async()=>{
-        try{
-           await handleLogout()
-            navigate("/login")
-        }catch(err){
-            console.log(err)
-        }
-    }
-
-// Setting
-    const handleSettings = () => {
-        navigate("/settings");
-    };
-
-
-
     if (loading) {
         return (
-            <main className='w-full min-h-screen flex items-center justify-center bg-[#0d1117] text-[#e6edf3]'>
-                <h1 className='text-lg'>Loading your interview plan...</h1>
-            </main>
+         <Spinner
+           size='lg'
+           fullScreen
+           text='Generating ....'
+        />
         )
     }
 
     return (
-    <div className="w-full min-h-screen bg-[#0d1117] text-[#e6edf3] flex flex-col items-center justify-center px-6 py-12 gap-8">
+    <div className=" flex flex-col items-center justify-center px-6 py-12 gap-8">
 
             {/* Page Header */}
          <div className='w-full min-h-[100px] flex items-center justify-between'>
 
-              <div className="flex-1">
-                {/* Empty for now */}
-                </div>
-
-            <header className=" flex-2 text-center">
+            <header className=" flex-1 text-center">
                 <h1 className="text-4xl font-bold text-[#e6edf3] mb-2">Create Your Custom <span className="text-pink-500">Interview Plan</span></h1>
                 <p className="text-[#7d8590] text-[15px] max-w-[480px] mx-auto leading-7">Let our AI analyze the job requirements and your unique profile to build a winning strategy.</p>
             </header>
-         
-            <div className=" flex-1 flex items-center gap-3 justify-center ">
-                <button
-                onClick={handleSettings}
-                className="flex items-center gap-2 rounded-[15px] h-[50px] px-5 bg-[#161b22] border border-[#2a3348] text-[#e6edf3] font-semibold transition hover:border-pink-500 hover:bg-pink-500/10" >
-                <Settings size={18} />
-                Settings
-               </button>
-
-               <button
-                onClick={handlelogout}
-                className="rounded-[15px] h-[50px] px-5 bg-[#161b22] border border-[#2a3348] text-[#e6edf3] font-semibold transition hover:border-pink-500 hover:bg-pink-500/10" >
-                Logout
-               </button>
-
-             </div>
+        
          </div>
    
 
@@ -164,12 +131,13 @@ const Home = () => {
                 {/* Card Footer */}
                 <div className="flex items-center justify-between px-6 py-4 border-t border-[#2a3348]"  >
                     <span className="text-xs text-[#7d8590]">AI-Powered Strategy Generation &bull; Approx 30s</span>
-                    <button
-                        onClick={handleGenerateReport}
-                        className="flex items-center gap-2 px-6 py-3 rounded-lg bg-gradient-to-r from-pink-500 to-pink-600 text-white text-sm font-semibold transition hover:opacity-90 active:scale-95">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z" /></svg>
+                   
+                    <Button
+                     onClick={handleGenerateReport}
+                    className='flex items-center gap-2 transition hover:opacity-90 active:scale-95' >
+                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z" /></svg>
                         Generate My Interview Strategy
-                    </button>
+                    </Button>
                 </div>
             </div>
 

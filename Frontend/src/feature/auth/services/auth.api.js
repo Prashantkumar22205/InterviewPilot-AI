@@ -49,7 +49,11 @@ export async function getMe() {
         const responce = await api.get("/api/auth/get-me")
         return responce.data
     } catch (err) {
-        // console.log(err)
+            if (err.response?.status !== 401) {
+            console.error("GET ME ERROR:", err);
+        }
+        //   console.error("GET ME ERROR:", err.response?.data || err.message);
+        throw err;
     }
 }
 
@@ -65,3 +69,12 @@ export async function changePassword({currentPassword ,newPassword}){
         throw err; 
     }
 }
+
+
+export const googleLogin = async (credential) => {
+    const response = await api.post("/auth/google", {
+        credential,
+    });
+
+    return response.data;
+};

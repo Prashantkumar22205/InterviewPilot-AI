@@ -5,6 +5,7 @@ import Home from "./feature/interview/pages/Home";
 import Interview from "./feature/interview/pages/interview"
 import  Protected  from "./feature/auth/conponents/Protected";
 import Settings from "./feature/auth/pages/Settings";
+import ProtectedLayout from "./shared/layout/ProtectedLayout";
 
 
 export const router = createBrowserRouter([
@@ -17,15 +18,25 @@ export const router = createBrowserRouter([
         element:<Register/>
     },
     {
-        path:"/",
-        element:<Protected><Home/></Protected>
-    },
-    {
-        path:"/interview/:interviewId",
-        element:<Protected><Interview/></Protected>
-    },
-    {
-        path:"/settings",
-        element:<Protected><Settings/></Protected>
+        element: <ProtectedLayout />,
+
+        children: [
+
+            {
+                path: "/",
+                element: <Home />
+            },
+
+            {
+                path: "/settings",
+                element: <Settings />
+            },
+
+            {
+                path: "/interview/:interviewId",
+                element: <Interview />
+            }
+
+        ]
     }
 ])

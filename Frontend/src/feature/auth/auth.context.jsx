@@ -1,5 +1,6 @@
 import { createContext,useState,useEffect } from "react";
-import { getMe,login,register,logout,changePassword} from "./services/auth.api";
+import { getMe,login,register,logout,changePassword,googleLogin} from "./services/auth.api";
+import { notify } from "../../shared/utils/toast";
 
 export const AuthContext = createContext( )
 
@@ -51,6 +52,7 @@ export const AuthProvider = ({children})=>{
         try {
             const data = await logout()
             setUser(null)
+            
         } catch (err) {
 
         } finally {
@@ -78,6 +80,35 @@ export const AuthProvider = ({children})=>{
 };
 
 
+    const handleGoogleLogin = async (credential) => {
+    setLoading(true);
+
+    try {
+        const data = await googleLogin(credential);
+
+        setUser(data.user);
+
+        notify.success("Welcome back!");
+
+        return data.user;
+
+    } catch (err) {
+
+        notify.error(
+            err.response?.data?.message ||
+            "Google login failed"
+        );
+
+        throw err;
+
+    } finally {
+
+        setLoading(false);
+
+    }
+};
+
+
 
     useEffect(() => {
       
@@ -87,7 +118,7 @@ export const AuthProvider = ({children})=>{
     
 
     return (
-      < AuthContext.Provider value = {{user,loading,handleGetMe,handleLogin,handleRegister,handleLogout,handleChangePassword}}>
+      < AuthContext.Provider value = {{user,loading,handleGetMe,handleLogin,handleRegister,handleLogout,handleChangePassword,handleGoogleLogin}}>
         {children}
       </AuthContext.Provider>
 

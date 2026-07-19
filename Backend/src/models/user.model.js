@@ -1,22 +1,40 @@
 const mongoose = require("mongoose")
 
 const userSchema = new mongoose.Schema({
-    username: {
+     username: {
         type: String,
-        unique: [ true, "username already taken" ],
         required: true,
+        unique: true,
     },
 
     email: {
         type: String,
-        unique: [ true, "Account already exists with this email address" ],
         required: true,
+        unique: true,
     },
 
     password: {
         type: String,
-        required: true
-    }
+        default: null,
+    },
+
+    googleId: {
+        type: String,
+        default: null,
+    },
+
+    avatar: {
+        type: String,
+        default: "",
+    },
+
+    authProvider: {
+        type: String,
+        enum: ["local", "google"],
+        default: "local",
+    },
+},{
+    timestamps: true,
 })
 
 const userModel = mongoose.model("users",userSchema)

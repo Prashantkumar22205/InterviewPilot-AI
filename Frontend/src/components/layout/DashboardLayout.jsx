@@ -1,23 +1,23 @@
-import Navbar from "./Navbar";
+// import Navbar from "./Navbar";
 
-const DashboardLayout = ({ children }) => {
+// const DashboardLayout = ({ children }) => {
 
-    return (
+//     return (
 
-        <div className="min-h-screen bg-[#0d1117]">
+//         <div className="min-h-screen bg-[#0d1117]">
 
-            <Navbar />
+//             <Navbar />
 
-            <main className="max-w-7xl mx-auto px-6 py-10">
+//             <main className="max-w-7xl mx-auto px-6 py-10">
 
-                {children}
+//                 {children}
 
-            </main>
+//             </main>
 
-        </div>
+//         </div>
 
-    );
+//     );
 
-};
+// };
 
-export default DashboardLayout;
+// export default DashboardLayout;

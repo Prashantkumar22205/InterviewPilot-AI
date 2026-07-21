@@ -40,41 +40,148 @@ const interviewReportSchema = z.object({
 async function generateInterviewReport({ resume, selfDescription, jobDescription }) {
 
 
-  const prompt = `
-You are an expert technical interviewer.
+//   const prompt = `
+// You are an expert technical interviewer.
 
-Analyze the candidate.
+// Analyze the candidate.
 
-Resume:
+// Resume:
+// ${resume}
+
+// Self Description:
+// ${selfDescription}
+
+// Job Description:
+// ${jobDescription}
+
+// IMPORTANT RULES
+
+// Return ONLY JSON.
+
+// Do not return markdown.
+
+// Do not wrap JSON objects inside strings.
+
+// Every array element must be a JSON object.
+
+// Do not create extra properties.
+
+// Follow the provided response schema exactly.
+
+// Generate:
+// - title of Report
+// - matchScore
+// - 8 technical questions
+// - 5 behavioral questions
+// - skill gaps
+// - 7-day preparation plan
+// `;
+
+const prompt = `
+You are an experienced Senior Software Engineer and Technical Interviewer at a top product-based company (Google, Microsoft, Amazon, Meta, Adobe, Atlassian).
+
+Your job is to analyze the candidate's profile against the target job description and generate a realistic interview preparation report.
+
+Candidate Resume:
 ${resume}
 
-Self Description:
+Candidate Self Description:
 ${selfDescription}
 
-Job Description:
+Target Job Description:
 ${jobDescription}
 
-IMPORTANT RULES
+========================
+GUIDELINES
+========================
 
-Return ONLY JSON.
+Analyze BOTH the candidate profile and the job description before generating the report.
 
-Do not return markdown.
+Base every recommendation on the information provided.
 
-Do not wrap JSON objects inside strings.
+Never generate generic interview content.
 
-Every array element must be a JSON object.
+Prioritize skills explicitly mentioned in the job description.
 
-Do not create extra properties.
+If the candidate already demonstrates a required skill through projects or experience, generate deeper practical interview questions instead of basic theoretical ones.
 
-Follow the provided response schema exactly.
+If an important required skill is missing, generate interview questions that evaluate that missing skill.
 
-Generate:
-- title of Report
-- matchScore
-- 8 technical questions
-- 5 behavioral questions
-- skill gaps
-- 7-day preparation plan
+Do not invent technologies or experience that are not present in either the resume or the job description.
+
+========================
+TECHNICAL QUESTIONS
+========================
+
+Generate EXACTLY 8 technical interview questions.
+
+Requirements:
+
+- Cover multiple important technologies from the job description.
+- Progress naturally from easier questions to more challenging ones.
+- Prefer scenario-based and practical questions over textbook definitions.
+- Reference the candidate's projects or experience whenever possible.
+- Avoid repeating the same topic.
+- If DSA, System Design, or OOP are not required by the job description, do not force questions about them.
+
+For every technical question:
+- Explain what the interviewer wants to evaluate.
+- Provide a concise, high-quality answer that highlights the key points a strong candidate should cover.
+
+========================
+BEHAVIORAL QUESTIONS
+========================
+
+Generate EXACTLY 5 behavioral interview questions.
+
+Requirements:
+
+- Tailor them to the candidate's background.
+- Ask about projects, teamwork, problem-solving, learning ability, ownership, debugging, communication, deadlines, and decision making where appropriate.
+- Avoid generic questions like "Tell me about yourself" unless absolutely necessary.
+- Make the questions sound like those asked by real interviewers.
+
+For every behavioral question:
+- Explain why the interviewer is asking it.
+- Provide a structured answer using the STAR approach whenever appropriate.
+
+========================
+SKILL GAPS
+========================
+
+Identify only meaningful skill gaps.
+
+Do not list technologies that are optional or only loosely related to the role.
+
+Severity should reflect how much the missing skill affects the candidate's chances.
+
+========================
+7-DAY PREPARATION PLAN
+========================
+
+Generate a practical 7-day preparation plan.
+
+Requirements:
+
+- Prioritize the most important missing skills first.
+- Do not waste time revising technologies the candidate already demonstrates confidently.
+- Mix theory, coding practice, project revision, interview preparation, and behavioral preparation.
+- Each day's workload should realistically take around 2-3 hours.
+- Ensure the preparation order builds logically from fundamentals to advanced concepts.
+
+========================
+OUTPUT FORMAT
+========================
+
+Return ONLY valid JSON.
+
+Do NOT return Markdown.
+
+Do NOT include explanations outside the JSON.
+
+Follow the response schema exactly.
+
+Do not add extra fields.
 `;
 
 
@@ -122,7 +229,23 @@ return report;
 
 
 async function generateResumeFromPdf(htmlContent) {
-      const browser = await puppeteer.launch()
+
+      const isRender = !!process.env.RENDER;
+
+      const executable = await puppeteer.executablePath();
+      console.log("RENDER:", process.env.RENDER);
+      console.log("Executable:", executable);
+
+        const browser = await puppeteer.launch({
+            headless: true,
+            args: isRender
+            ? [
+                "--no-sandbox",
+                "--disable-setuid-sandbox",
+                "--disable-dev-shm-usage",
+              ]
+            : [],
+  })
       const page = await browser.newPage()
       await page.setContent(htmlContent, { waitUntil: "networkidle0" })
 

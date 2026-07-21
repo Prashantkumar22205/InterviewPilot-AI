@@ -237,6 +237,7 @@ async function generateResumeFromPdf(htmlContent) {
       console.log("Executable:", executable);
 
         const browser = await puppeteer.launch({
+           executablePath: executable,
             headless: true,
             args: isRender
             ? [

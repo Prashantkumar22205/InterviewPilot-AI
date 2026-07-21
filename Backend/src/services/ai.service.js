@@ -3,7 +3,8 @@ const { model } = require("mongoose");
 const { z } = require("zod")
 // const { zodToJsonSchema } = require("zod-to-json-schema")
 
-const puppeteer = require("puppeteer")
+const puppeteer = require("puppeteer-core");
+const chromium = require("@sparticuz/chromium");
 
 const ai= new GoogleGenAI({
      apiKey: process.env.GOOGLE_GENAI_API_KEY
@@ -230,23 +231,11 @@ return report;
 
 async function generateResumeFromPdf(htmlContent) {
 
-      const isRender = !!process.env.RENDER;
-
-      const executable = await puppeteer.executablePath();
-      console.log("RENDER:", process.env.RENDER);
-      console.log("Executable:", executable);
-
-        const browser = await puppeteer.launch({
-           executablePath: executable,
-            headless: true,
-            args: isRender
-            ? [
-                "--no-sandbox",
-                "--disable-setuid-sandbox",
-                "--disable-dev-shm-usage",
-              ]
-            : [],
-  })
+         const browser = await puppeteer.launch({
+          executablePath: await chromium.executablePath(),
+          args: chromium.args,
+          headless: true,
+  });
       const page = await browser.newPage()
       await page.setContent(htmlContent, { waitUntil: "networkidle0" })
 

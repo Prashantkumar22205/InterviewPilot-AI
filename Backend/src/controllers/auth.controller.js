@@ -1,8 +1,10 @@
 const userModel = require("../models/user.model")
 const bcrypt = require("bcryptjs")
+const crypto = require("crypto");
 const jwt = require("jsonwebtoken")
 const tokenBlacklistModel = require("../models/blacklist.model")
 const { generateToken, cookieOptions } = require("../utils/auth");
+const { sendVerificationEmail } = require("../services/email.service");
 
 /**
  * @name registerUserController
@@ -10,6 +12,7 @@ const { generateToken, cookieOptions } = require("../utils/auth");
  * @access Public
  */
 const registerUserController = async(req,res)=>{
+    try{
     
     const { username, email, password } = req.body
 
@@ -23,32 +26,56 @@ const registerUserController = async(req,res)=>{
         $or: [ { username }, { email } ]
     })
 
-    if (isUserAlreadyExists) {
+      if (isUserAlreadyExists) {
         return res.status(400).json({
             message: "Account already exists with this email address or username"
         })
     }
 
+    const verificationToken = crypto.randomBytes(32).toString("hex");
+    const verificationTokenExpires =  new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+
+
     const hash = await bcrypt.hash(password, 10)
+
+    
 
     const user = await userModel.create({
         username,
         email,
-        password: hash
+        password: hash,
+        authProvider: "local",
+        isVerified: false,
+        verificationToken,
+        verificationTokenExpires,
     })
 
-    const token = generateToken(user)
-    res.cookie("token",token, cookieOptions)
+    console.log("Before sendVerificationEmail");
 
+    await sendVerificationEmail(
+    user.email,
+    user.username,
+    verificationToken
+);
 
+console.log("After sendVerificationEmail");
+
+   const token = generateToken(user)
+   res.cookie("token",token, cookieOptions)
     res.status(201).json({
-        message: "User registered successfully",
-        user: {
-            id: user._id,
-            username: user.username,
-            email: user.email
-        }
+        message: "Registration successful. Please check your email to verify your account.",
+        
     })
+
+ 
+ 
+}catch(err){
+      console.error(err);
+
+        return res.status(500).json({
+            message: "Internal Server Error"
+        });
+}
 
 }
 
@@ -75,6 +102,12 @@ async function loginUserController(req, res) {
             message: "Invalid email or password"
         })
     }
+
+    if (!user.isVerified) {
+    return res.status(403).json({
+        message: "Please verify your email before logging in."
+    });
+}
 
     const isPasswordValid = await bcrypt.compare(password, user.password)
 
@@ -144,7 +177,11 @@ const  getMeController = async (req, res) =>{
 
 }
 
-
+/**
+ * @name changePasswordController
+ * @description we can change the Password 
+ * @access private
+ */
 const changePasswordController = async(req,res)=>{
     try{
      const {currentPassword , newPassword} = req.body
@@ -196,6 +233,71 @@ const changePasswordController = async(req,res)=>{
     }
 }
 
+/**
+ * @name verifyEmailController
+ * @description we verify the email id 
+ * @access private
+ */
+const verifyEmailController = async (req, res) => {
+    try {
+
+        console.log("========== VERIFY EMAIL ==========");
+        console.log("Body:", req.body);
+
+        const { token } = req.body;
+
+        console.log("Token:", token);
+
+        if (!token) {
+            return res.status(400).json({
+                message: "Verification token is required."
+            });
+        }
+
+       const user = await userModel.findOne({
+            verificationToken: token,
+            
+        });
+
+            console.log("User:", user);
+
+        if (!user) {
+            return res.status(400).json({
+                message: "Invalid verification link."
+            });
+        }
+
+        if (user.isVerified) {
+            return res.status(200).json({
+                message: "Email already verified."
+            });
+        }
+
+        if (user.verificationTokenExpires < new Date()) {
+            return res.status(400).json({
+                message: "Verification link has expired."
+            });
+        }
+
+        user.isVerified = true;
+        user.verificationToken = null;
+        user.verificationTokenExpires = null;
+
+        await user.save();
+
+        return res.status(200).json({
+            message: "Email verified successfully."
+        });
+
+    } catch (err) {
+        console.error(err);
+
+        return res.status(500).json({
+            message: "Internal Server Error"
+        });
+    }
+};
+
 
 
 
@@ -204,5 +306,6 @@ module.exports = {
     loginUserController,
     logoutUserController,
     getMeController,
-    changePasswordController
+    changePasswordController,
+    verifyEmailController
 }

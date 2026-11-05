@@ -5,6 +5,7 @@ import { useAuth } from '../../auth/hooks/useAuth.js'
 import { Settings } from "lucide-react";
 import Button from '../../../shared/ui/Button.jsx';
 import Spinner from '../../../shared/ui/Spinner.jsx';
+import AILoading from '../../../shared/ui/AILoading.jsx';
 import { notify } from '../../../shared/utils/toast.js'
 const Home = () => {
 
@@ -25,11 +26,12 @@ const Home = () => {
 
     if (loading) {
         return (
-         <Spinner
-           size='lg'
-           fullScreen
-           text='Generating ....'
-        />
+        //  <Spinner
+        //    size='lg'
+        //    fullScreen
+        //    text='Generating ....'
+        // />
+        <AILoading message="Generating your interview plan..."/>
         )
     }
 

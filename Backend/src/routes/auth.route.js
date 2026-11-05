@@ -12,6 +12,9 @@ const router = express.Router()
  */
 router.post("/register",authController.registerUserController)
 
+router.post( "/verify-email",authController.verifyEmailController);
+
+
 /**
  * @route POST /api/auth/login
  * @description login user with email and password
@@ -45,5 +48,8 @@ router.patch(
     authMiddleware.authUser,
     authController.changePasswordController
 );
+
+
+
 
 module.exports=router

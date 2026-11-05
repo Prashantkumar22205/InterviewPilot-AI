@@ -20,6 +20,9 @@ const Register = () => {
                 await handleRegister({username,email,password})
                 navigate("/login");
                 notify.success("Account created successfully!");
+                //  navigate("/check-email", {
+                //     state: { email },
+                // });
             }
             catch(err){
                 // setError(err.response?.data?.message || "email is already exist ")

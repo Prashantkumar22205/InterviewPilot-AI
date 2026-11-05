@@ -6,7 +6,7 @@ import Interview from "./feature/interview/pages/interview"
 import  Protected  from "./feature/auth/conponents/Protected";
 import Settings from "./feature/auth/pages/Settings";
 import ProtectedLayout from "./shared/layout/ProtectedLayout";
-
+import VerifyEmail from "./feature/auth/pages/VerifyEmail";
 
 export const router = createBrowserRouter([
     {
@@ -16,6 +16,10 @@ export const router = createBrowserRouter([
     {
         path:"/register",
         element:<Register/>
+    },
+    {
+       path:"/verify-email",
+       element:<VerifyEmail/>
     },
     {
         element: <ProtectedLayout />,

@@ -39,7 +39,7 @@ export const AuthProvider = ({children})=>{
          setLoading(true)
         try {
             const data = await register({ username, email, password })
-            setUser(data.user)
+            return data
         } catch (err) {
              throw err
         } finally {

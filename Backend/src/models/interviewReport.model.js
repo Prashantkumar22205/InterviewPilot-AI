@@ -96,7 +96,7 @@ const interviewReportSchema = new mongoose.Schema({
         type:String,
         required:[true,"Job description is required"]
     },
-     resume: {
+    resume: {
         type: String,
     },
     selfDescription: {

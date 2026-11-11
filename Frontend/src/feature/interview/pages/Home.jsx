@@ -145,21 +145,43 @@ const Home = () => {
 
             {/* Recent Reports List */}
             {reports.length > 0 && (
-                <section className="flex flex-col gap-4 w-full max-w-[900px]">
-                    <h2 className="text-2xl font-semibold text-[#e6edf3]">My Recent Interview Plans</h2>
-                    <ul className="flex flex-wrap gap-3">
-                        {reports.map(report => (
-                            <li key={report._id} 
-                            className="flex flex-col gap-2 flex-1 shrink-0 p-4 rounded-lg bg-[#161b22] border border-[#2a3348] cursor-pointer hover:border-pink-500 transition" 
-                            onClick={() => navigate(`/interview/${report._id}`)}>
-                                <h3 className="text-base font-semibold text-[#e6edf3]">{report.title || 'Untitled Position'}</h3>
-                                <p className="text-xs text-[#7d8590]">Generated on {new Date(report.createdAt).toLocaleDateString()}</p>
-                                <p className={`text-sm font-semibold ${report.matchScore >= 80 ? 'text-green-400' : report.matchScore >= 60 ? 'text-yellow-400' : 'text-red-400'}`}>Match Score: {report.matchScore}%</p>
-                            </li>
-                        ))}
-                    </ul>
-                </section>
-            )}
+             <section className="flex flex-col gap-4 w-full max-w-[1125px] min-w-0">
+             <h2 className="text-2xl font-semibold text-[#e6edf3]">
+              My Recent Interview Plans
+             </h2>
+
+            {/* Horizontal Scroll Container */}
+            <ul className="flex gap-4 overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-[#2a3348] scrollbar-track-transparent">
+            {reports.map(report => (
+                <li
+                    key={report._id}
+                    className="flex flex-col gap-2 flex-none w-[220px] p-4 rounded-lg bg-[#161b22] border border-[#2a3348] cursor-pointer hover:border-pink-500 transition"
+                    onClick={() => navigate(`/interview/${report._id}`)}
+                >
+                    <h3 className="text-base font-semibold text-[#e6edf3] break-words">
+                        {report.title || 'Untitled Position'}
+                    </h3>
+
+                    <p className="text-xs text-[#7d8590]">
+                        Generated on {new Date(report.createdAt).toLocaleDateString()}
+                    </p>
+
+                    <p className={`text-sm font-semibold ${
+                        report.matchScore >= 80
+                            ? 'text-green-400'
+                            : report.matchScore >= 60
+                                ? 'text-yellow-400'
+                                : 'text-red-400'
+                    }`}>
+                        Match Score: {report.matchScore}%
+                    </p>
+                </li>
+            ))}
+        </ul>   
+    </section>
+)}
+
+
 
             {/* Page Footer */}
             <footer className="flex flex-wrap gap-6 text-xs text-[#7d8590]">

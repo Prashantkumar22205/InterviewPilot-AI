@@ -72,7 +72,7 @@ const generateResumePdfController = async(req,res)=>{
 
     const {interviewReportId} = req.params
 
-    const interviewReport = await interviewReportModel.findById({
+    const interviewReport = await interviewReportModel.findOne({
         _id: interviewReportId,
         user: req.user.id
     });
